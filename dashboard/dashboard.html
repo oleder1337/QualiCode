@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>PDF Coder – Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <!-- Linke Navigation -->
+  <nav id="nav">
+    <div id="nav-brand">
+      <span class="brand-dot"></span>
+      <span class="brand-name">PDF Coder</span>
+    </div>
+    <ul id="nav-links">
+      <li class="nav-item active" data-page="start">📊 Übersicht</li>
+      <li class="nav-item" data-page="projects">📁 Projekte</li>
+      <li class="nav-item" data-page="themes">🏷 Themen</li>
+      <li class="nav-item" data-page="documents">📄 Dokumente</li>
+      <li class="nav-item" data-page="export">⬇ Export</li>
+      <li class="nav-item" data-page="backup">💾 Backup</li>
+    </ul>
+  </nav>
+
+  <!-- Hauptinhalt -->
+  <main id="content">
+
+    <!-- ── Übersicht ── -->
+    <section id="page-start" class="page active">
+      <h1 class="page-title">Übersicht</h1>
+      <div id="stats-cards"></div>
+      <h2 class="section-title">Zuletzt bearbeitet</h2>
+      <div id="recent-docs"></div>
+    </section>
+
+    <!-- ── Projekte ── -->
+    <section id="page-projects" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Projekte</h1>
+        <button id="btn-create-project" class="btn-primary">+ Neues Projekt</button>
+      </div>
+      <div id="project-form-container" hidden>
+        <!-- Inline-Formular für Erstellen/Bearbeiten -->
+        <div id="project-inline-form" class="inline-form">
+          <input type="text" id="pf-name" placeholder="Projektname…" maxlength="80">
+          <input type="text" id="pf-desc" placeholder="Beschreibung…" maxlength="200">
+          <div class="form-row">
+            <label>Farbe <input type="color" id="pf-color" value="#89b4fa"></label>
+            <button id="pf-save" class="btn-primary">Speichern</button>
+            <button id="pf-cancel" class="btn-ghost">Abbrechen</button>
+          </div>
+        </div>
+      </div>
+      <table id="projects-table" class="data-table">
+        <thead><tr><th>Name</th><th>Themen</th><th>Dokumente</th><th>Codierungen</th><th>Zuletzt</th><th>Aktionen</th></tr></thead>
+        <tbody id="projects-tbody"></tbody>
+      </table>
+      <!-- Projekt-Detail-Panel (erscheint beim Klick auf eine Zeile) -->
+      <div id="project-detail" hidden>
+        <div class="detail-header">
+          <button id="btn-back-projects" class="btn-ghost">← Zurück</button>
+          <h2 id="project-detail-name"></h2>
+        </div>
+        <div class="detail-grid">
+          <div>
+            <h3 class="section-title">Themen</h3>
+            <ul id="project-detail-themes"></ul>
+          </div>
+          <div>
+            <h3 class="section-title">Dokumente</h3>
+            <ul id="project-detail-documents"></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Themen ── -->
+    <section id="page-themes" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Themen</h1>
+        <div class="filter-bar">
+          <select id="themes-filter-project"><option value="">Alle Projekte</option></select>
+          <input type="search" id="themes-search" placeholder="Suchen…">
+        </div>
+      </div>
+      <div id="themes-list"></div>
+    </section>
+
+    <!-- ── Dokumente ── -->
+    <section id="page-documents" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Dokumente</h1>
+        <div class="filter-bar">
+          <select id="docs-filter-project"><option value="">Alle Projekte</option></select>
+          <select id="docs-sort">
+            <option value="date">Neueste zuerst</option>
+            <option value="name">Name A-Z</option>
+            <option value="count">Meiste Codierungen</option>
+          </select>
+        </div>
+      </div>
+      <div id="documents-list"></div>
+    </section>
+
+    <!-- ── Export ── -->
+    <section id="page-export" class="page">
+      <h1 class="page-title">Export</h1>
+      <div id="export-wizard">
+        <!-- Schritt-Indikatoren -->
+        <div id="wizard-steps">
+          <div class="wizard-step active" data-step="1"><span class="step-num">1</span> Was exportieren?</div>
+          <div class="wizard-step" data-step="2"><span class="step-num">2</span> Vorschau</div>
+          <div class="wizard-step" data-step="3"><span class="step-num">3</span> Download</div>
+        </div>
+
+        <!-- Schritt 1: Bereich wählen -->
+        <div id="wizard-step-1" class="wizard-panel active">
+          <div class="scope-options">
+            <label class="scope-option">
+              <input type="radio" name="export-scope" value="project" checked>
+              <span>Gesamtes Projekt</span>
+            </label>
+            <label class="scope-option">
+              <input type="radio" name="export-scope" value="themes">
+              <span>Bestimmte Themen</span>
+            </label>
+            <label class="scope-option">
+              <input type="radio" name="export-scope" value="document">
+              <span>Bestimmtes Dokument</span>
+            </label>
+          </div>
+          <div id="scope-details">
+            <select id="export-project-select"></select>
+            <div id="themes-checkboxes" hidden></div>
+            <div id="document-select-wrapper" hidden>
+              <select id="export-document-select"></select>
+            </div>
+          </div>
+          <button id="btn-wizard-next" class="btn-primary">Weiter →</button>
+        </div>
+
+        <!-- Schritt 2: Vorschau -->
+        <div id="wizard-step-2" class="wizard-panel">
+          <div id="export-preview"></div>
+          <div class="wizard-nav">
+            <button id="btn-wizard-back-1" class="btn-ghost">← Zurück</button>
+            <button id="btn-wizard-to-3" class="btn-primary">Weiter →</button>
+          </div>
+        </div>
+
+        <!-- Schritt 3: Download -->
+        <div id="wizard-step-3" class="wizard-panel">
+          <div class="export-options">
+            <label class="scope-option">
+              <input type="radio" name="export-layout" value="per_theme" checked>
+              <span>Pro Thema ein Sheet</span>
+            </label>
+            <label class="scope-option">
+              <input type="radio" name="export-layout" value="combined">
+              <span>Alles in einem Sheet</span>
+            </label>
+          </div>
+          <div class="wizard-nav">
+            <button id="btn-wizard-back-2" class="btn-ghost">← Zurück</button>
+            <button id="btn-do-export" class="btn-primary btn-export-go">⬇ Excel herunterladen</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Backup ── -->
+    <section id="page-backup" class="page">
+      <h1 class="page-title">Backup &amp; Daten</h1>
+
+      <div class="backup-group">
+        <h2 class="section-title">Vollständiges Backup</h2>
+        <div class="backup-row">
+          <div class="backup-desc">Alle Projekte, Themen und Codierungen als JSON exportieren.</div>
+          <button id="btn-full-export" class="btn-primary">☁ Backup erstellen</button>
+        </div>
+        <div class="backup-row">
+          <div class="backup-desc">Backup-Datei importieren (überschreibt alle bestehenden Daten).</div>
+          <button id="btn-full-import" class="btn-ghost">↑ Backup importieren</button>
+          <input type="file" id="full-import-file" accept=".json" hidden>
+        </div>
+      </div>
+
+      <div class="backup-group">
+        <h2 class="section-title">Einzelnes Projekt</h2>
+        <div class="backup-row">
+          <select id="single-project-select"></select>
+          <button id="btn-project-export" class="btn-ghost">⬇ Exportieren</button>
+        </div>
+        <div class="backup-row">
+          <div class="backup-desc">Projekt-Export-Datei importieren (wird als neues Projekt hinzugefügt).</div>
+          <button id="btn-project-import" class="btn-ghost">↑ Projekt importieren</button>
+          <input type="file" id="project-import-file" accept=".json" hidden>
+        </div>
+      </div>
+
+      <div class="backup-group danger-zone">
+        <h2 class="section-title danger">⚠ Gefahrenzone</h2>
+        <div class="backup-row">
+          <div class="backup-desc">Alle Daten unwiderruflich löschen. Nur das Standard-Projekt bleibt erhalten.</div>
+          <button id="btn-clear-all" class="btn-danger">Alle Daten löschen</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Toast-Benachrichtigung -->
+  <div id="toast" hidden></div>
+
+  <!-- Modal: Thema verschieben/kopieren -->
+  <div id="theme-move-modal" class="modal-overlay" hidden>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <span id="theme-move-title">Thema verschieben</span>
+        <button id="btn-close-theme-move" class="btn-icon">✕</button>
+      </div>
+      <div class="modal-body" style="padding:16px">
+        <p style="font-size:13px;color:#a6adc8;margin-bottom:12px">Ziel-Projekt auswählen:</p>
+        <select id="theme-move-target" style="width:100%;margin-bottom:16px"></select>
+        <div style="display:flex;gap:8px">
+          <button id="btn-theme-move-confirm" class="btn-primary" style="flex:1">Verschieben</button>
+          <button id="btn-theme-copy-confirm" class="btn-ghost" style="flex:1">Kopieren</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../lib/xlsx.full.min.js"></script>
+  <script type="module" src="dashboard.js"></script>
+</body>
+</html>

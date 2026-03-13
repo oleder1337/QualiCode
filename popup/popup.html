@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>PDF Coder</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="popup-header">
+    <h1 class="title">PDF Coder</h1>
+    <span class="status-dot" title="Extension aktiv"></span>
+  </header>
+  <div id="popup-stats">
+    <div class="mini-stat"><span id="stat-projects">–</span><span class="mini-stat-label">Projekte</span></div>
+    <div class="mini-stat"><span id="stat-docs">–</span><span class="mini-stat-label">Dokumente</span></div>
+    <div class="mini-stat"><span id="stat-codings">–</span><span class="mini-stat-label">Codierungen</span></div>
+  </div>
+  <div id="popup-dashboard-btn-wrapper">
+    <button id="btn-open-dashboard">Dashboard öffnen →</button>
+  </div>
+  <div id="doc-list-container">
+    <p id="doc-empty" hidden>Noch keine Codierungen gespeichert.</p>
+    <ul id="doc-list"></ul>
+  </div>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

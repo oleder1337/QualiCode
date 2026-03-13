@@ -1,0 +1,59 @@
+{
+  "manifest_version": 3,
+  "name": "PDF Coder",
+  "version": "1.0.0",
+  "description": "Öffnet PDF-Dateien in einem eigenen Viewer mit selektierbarem Text",
+
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "storage",
+    "webNavigation",
+    "downloads"
+  ],
+
+  "host_permissions": [
+    "<all_urls>"
+  ],
+
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "type": "module"
+  },
+
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "viewer/viewer.html",
+        "viewer/viewer.css",
+        "viewer/viewer.js",
+        "viewer/storage.js",
+        "viewer/sidebar.js",
+        "viewer/coding.js",
+        "viewer/export.js",
+        "dashboard/dashboard.html",
+        "dashboard/dashboard.css",
+        "dashboard/dashboard.js",
+        "lib/pdf.min.mjs",
+        "lib/pdf.worker.min.mjs",
+        "lib/xlsx.full.min.js"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

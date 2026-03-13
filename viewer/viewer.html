@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF Coder – Viewer</title>
+  <link rel="stylesheet" href="viewer.css" />
+</head>
+<body>
+
+  <!-- Obere Navigationsleiste -->
+  <header id="toolbar">
+    <span id="pdf-title">PDF Coder</span>
+    <div id="nav-controls">
+      <button id="btn-prev" title="Vorherige Seite">&#8249;</button>
+      <span id="page-info">Seite <span id="page-current">–</span> von <span id="page-total">–</span></span>
+      <button id="btn-next" title="Nächste Seite">&#8250;</button>
+    </div>
+    <div id="zoom-controls">
+      <button id="btn-zoom-out" title="Verkleinern">−</button>
+      <span id="zoom-label">100%</span>
+      <button id="btn-zoom-in" title="Vergrößern">+</button>
+    </div>
+  </header>
+
+  <!-- Hauptbereich: Hier werden alle Seiten als Canvas gerendert -->
+  <main id="viewer-container">
+    <div id="pages-wrapper"></div>
+  </main>
+
+  <!-- Sidebar: Themen- und Codierungs-Verwaltung -->
+  <aside id="sidebar">
+
+    <!-- Resize-Handle (ziehbarer linker Rand der Sidebar) -->
+    <div id="sidebar-resize-handle"></div>
+
+    <!-- ── Projekt-Bereich ── -->
+    <div id="project-section">
+      <select id="project-select"></select>
+      <button id="btn-manage-projects" title="Projekte verwalten">Verwalten</button>
+    </div>
+
+    <!-- ── Themen-Bereich ── -->
+    <div id="sidebar-header">
+      <span id="sidebar-title">Themen</span>
+      <button id="btn-new-theme" title="Neues Thema erstellen (⌃⇧S öffnet Sidebar)">+ Neu</button>
+    </div>
+
+    <!-- Formular: Neues Thema / Thema bearbeiten -->
+    <div id="theme-form" hidden>
+      <input type="text" id="theme-name-input" placeholder="Thema-Name…" maxlength="60" />
+      <div id="theme-color-row">
+        <label for="theme-color-input">Farbe</label>
+        <input type="color" id="theme-color-input" value="#FF6B6B" />
+      </div>
+      <div id="theme-form-actions">
+        <button id="btn-save-theme" class="btn-primary">Speichern</button>
+        <button id="btn-cancel-theme" class="btn-ghost">Abbrechen</button>
+      </div>
+    </div>
+
+    <ul id="theme-list"></ul>
+    <p id="theme-empty-hint">Noch keine Themen. Erstelle dein erstes Thema.</p>
+
+    <!-- ── Statistik-Bereich ── -->
+    <div id="stats-section" hidden>
+      <div id="stats-header">
+        <span>Statistik</span>
+      </div>
+      <div id="stats-chart"></div>
+    </div>
+
+    <!-- ── Codierungen-Bereich ── -->
+    <div id="codings-section">
+      <div id="codings-header">
+        <span>Codierungen</span>
+        <span id="codings-count" class="badge">0</span>
+      </div>
+      <div id="codings-search-wrapper">
+        <input type="search" id="codings-search" placeholder="Suchen…" />
+      </div>
+      <div id="codings-list"></div>
+      <p id="codings-empty-hint">Noch keine Codierungen im Dokument.</p>
+    </div>
+
+    <!-- ── Export-Bereich ── -->
+    <div id="export-section">
+      <button id="btn-export-xlsx" class="btn-export" disabled title="Codierungen als Excel exportieren">
+        ⬇ Als Excel exportieren
+      </button>
+      <div id="backup-section">
+        <button id="btn-backup-export" class="btn-backup-small">☁ Backup</button>
+        <button id="btn-backup-import" class="btn-backup-small">↑ Importieren</button>
+        <input type="file" id="backup-file-input" accept=".json" hidden>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- Toggle-Button zum Ein-/Ausklappen der Sidebar -->
+  <button id="btn-sidebar-toggle" title="Sidebar ein-/ausklappen">&#8942;</button>
+
+  <!-- Floating Menü: erscheint bei Text-Selektion im PDF -->
+  <div id="coding-menu" hidden>
+    <p id="coding-menu-label">Thema zuordnen</p>
+    <ul id="coding-menu-themes"></ul>
+  </div>
+
+  <!-- Toast-Benachrichtigung (z.B. "X Codierungen wiederhergestellt") -->
+  <div id="toast" hidden></div>
+
+  <!-- Projekt-Verwaltungs-Modal -->
+  <div id="project-modal" class="modal-overlay" hidden>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <span class="modal-title">Projekte verwalten</span>
+        <button id="btn-close-project-modal" class="btn-icon" title="Schließen">✕</button>
+      </div>
+      <div class="modal-body">
+        <button id="btn-new-project" class="btn-primary modal-new-btn">+ Neues Projekt</button>
+        <div id="project-edit-form" hidden>
+          <input type="text" id="project-name-input" placeholder="Projektname…" maxlength="80" />
+          <input type="text" id="project-desc-input" placeholder="Beschreibung (optional)…" maxlength="200" />
+          <div class="project-color-row">
+            <label for="project-color-input">Farbe</label>
+            <input type="color" id="project-color-input" value="#89b4fa" />
+          </div>
+          <div class="project-form-actions">
+            <button id="btn-save-project" class="btn-primary">Speichern</button>
+            <button id="btn-cancel-project" class="btn-ghost">Abbrechen</button>
+          </div>
+        </div>
+        <div id="project-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ladeindikator -->
+  <div id="loading-overlay">
+    <div id="loading-spinner"></div>
+    <p id="loading-text">PDF wird geladen…</p>
+  </div>
+
+  <!-- Fehlermeldung -->
+  <div id="error-overlay" hidden>
+    <p id="error-text">Fehler beim Laden des PDFs.</p>
+  </div>
+
+  <!-- SheetJS: lokal eingebunden (kein CDN – Extension-CSP erlaubt nur 'self') -->
+  <script src="../lib/xlsx.full.min.js"></script>
+  <!-- Viewer-Logik als ES-Modul -->
+  <script type="module" src="viewer.js"></script>
+  <!-- Sidebar / Themen-Verwaltung -->
+  <script type="module" src="sidebar.js"></script>
+  <!-- Codierungs-Logik -->
+  <script type="module" src="coding.js"></script>
+  <!-- Excel-Export -->
+  <script type="module" src="export.js"></script>
+</body>
+</html>

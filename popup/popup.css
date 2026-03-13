@@ -1,0 +1,172 @@
+/* Popup – Dokument-Übersicht */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #1e1e2e;
+  color: #cdd6f4;
+  width: 320px;
+  min-height: 80px;
+  max-height: 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ──────────────────────────────────────────── */
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid #313244;
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #89b4fa;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #a6e3a1;
+  box-shadow: 0 0 6px #a6e3a1;
+}
+
+/* ── Dokument-Liste ──────────────────────────────────── */
+
+#doc-list-container {
+  overflow-y: auto;
+  flex: 1;
+  padding: 6px 0;
+}
+
+#doc-empty {
+  font-size: 12px;
+  color: #585b70;
+  text-align: center;
+  padding: 20px 16px;
+}
+
+#doc-list {
+  list-style: none;
+}
+
+.doc-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #181825;
+  transition: background 0.1s;
+}
+
+.doc-item:hover {
+  background: #181825;
+}
+
+.doc-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.doc-info {
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.doc-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #cdd6f4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.doc-meta {
+  font-size: 11px;
+  color: #585b70;
+  margin-top: 3px;
+}
+
+.doc-meta span + span::before {
+  content: " · ";
+}
+
+.btn-delete-doc {
+  background: transparent;
+  border: none;
+  color: #585b70;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: color 0.15s, background 0.15s;
+}
+
+.btn-delete-doc:hover {
+  color: #f38ba8;
+  background: #3d2a2f;
+}
+
+/* Statistik-Leiste */
+#popup-stats {
+  display: flex;
+  border-bottom: 1px solid #313244;
+}
+
+.mini-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 8px;
+  border-right: 1px solid #313244;
+}
+
+.mini-stat:last-child { border-right: none; }
+
+.mini-stat span:first-child {
+  font-size: 18px;
+  font-weight: 700;
+  color: #89b4fa;
+  line-height: 1;
+}
+
+.mini-stat-label {
+  font-size: 10px;
+  color: #585b70;
+  margin-top: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Dashboard-Button */
+#popup-dashboard-btn-wrapper {
+  padding: 10px 14px;
+  border-bottom: 1px solid #313244;
+}
+
+#btn-open-dashboard {
+  width: 100%;
+  background: #89b4fa;
+  color: #1e1e2e;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 0;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#btn-open-dashboard:hover { background: #b4d0ff; }
